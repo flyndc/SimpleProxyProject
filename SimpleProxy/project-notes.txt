@@ -1,0 +1,49 @@
+####################################
+# Proxy description
+####################################
+
+This is a very simple proxy server that does one specific task
+It will accept a POST request and relay it to an upstream server with an added JWT token
+It will eccept request on a specified port, default of 80
+It will send request to a specified address on port 80
+
+
+####################################
+# Requirment:
+####################################
+
+use claims:
+iat - Timestamp of the request as specified by the specification
+jti - A cryptographic nonce that should be unique
+payload - A json payload of the structure:
+	{"user":"username","date":"todays date"}
+
+The JWT should be signed with the following hex string secret using the HS512 alogrithm as in the JWT spec.
+a9ddbcaba8c0ac1a0a812dc0c2f08514b23f2db0a68343cb8199ebb38a6d91e4ebfb378e22ad39c2d01d0b4ec9c34aa91056862ddace3fbbd6852ee60c36acbf
+
+####################################
+# Usage
+####################################
+
+SimpleProxy.py [[<srcPort>] [<destAddress>]]
+
+####################################
+# Client testing
+####################################
+
+# Test of local proxy
+>>> curl -d "{'name','Derrik','hobby':'aviation'}" -H "Content-Type: application/json" -X POST http://127.0.0.1:8881
+<<< {'name','Derrik','hobby':'aviation'}
+
+# Test of local proxy using blank GET
+>>> curl  http://127.0.0.1:8881
+<<< Nothing done
+
+
+####################################
+# Service testing
+####################################
+
+python SimpleProxy.py
+python SimpleProxy.py 8881
+python SimpleProxy.py 8881 http://postman-echo.com/post
